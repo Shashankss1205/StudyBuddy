@@ -15,7 +15,6 @@ from dotenv import load_dotenv
 import re
 import zipfile
 import io
-from google.cloud import storage
 
 load_dotenv()
 
@@ -26,34 +25,13 @@ CORS(app)
 GOOGLE_API_KEY = os.getenv('GEMINI_API_KEY')
 print(f"Google API Key: {GOOGLE_API_KEY[:10]}...")
 
-# Configure Google Cloud Storage
-storage_client = storage.Client()
-bucket_name = os.getenv('GCS_BUCKET_NAME')
-bucket = storage_client.bucket(bucket_name)
-
 # Configure Google Generative AI
 genai_client = genai.Client(api_key=GOOGLE_API_KEY)
 
-# Main upload folder (for local development)
+# Main upload folder
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-
-def upload_to_gcs(file_path, destination_blob_name):
-    """Upload a file to Google Cloud Storage"""
-    blob = bucket.blob(destination_blob_name)
-    blob.upload_from_filename(file_path)
-    return blob.public_url
-
-def download_from_gcs(blob_name, local_path):
-    """Download a file from Google Cloud Storage"""
-    blob = bucket.blob(blob_name)
-    blob.download_to_filename(local_path)
-
-def list_gcs_files(prefix):
-    """List files in Google Cloud Storage with given prefix"""
-    blobs = bucket.list_blobs(prefix=prefix)
-    return [blob.name for blob in blobs]
 
 # Route to get a list of existing PDFs
 @app.route('/existing-pdfs', methods=['GET'])
