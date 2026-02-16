@@ -46,7 +46,7 @@ StudyBuddy/
 
 1. Install dependencies:
    ```bash
-   pip install flask flask-cors pdf2image pillow google-generative-ai python-dotenv
+   pip install flask flask-cors pdf2image pillow google-generativeai python-dotenv
    ```
 
 2. Create a `.env` file in the backend directory with your Google API key:
